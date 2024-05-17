@@ -25,12 +25,51 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("debug") {
             isMinifyEnabled = false
+            isShrinkResources = false
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
+                getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
             )
+            testProguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguardTest-rules.pro"
+            )
+        }
+
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+            testProguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguardTest-rules.pro"
+            )
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests {
+        isIncludeAndroidResources = true
+
+        all { test ->
+            with(test) {
+                testLogging {
+                    events = setOf(
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_OUT,
+                        org.gradle.api.tasks.testing.logging.TestLogEvent.STANDARD_ERROR,
+                    )
+                }
+            }
         }
     }
 
@@ -81,6 +120,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(kotlin("test"))
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
