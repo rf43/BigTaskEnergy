@@ -1,8 +1,9 @@
 package io.cursedfunction.bigtaskenergy.data
 
+import io.cursedfunction.bigtaskenergy.data.local.database.BigTaskModel
 import io.cursedfunction.bigtaskenergy.domain.data.BigTask
 
-fun BigTaskDto.toDomainModel(): BigTask {
+fun BigTaskModel.toDomainModel(): BigTask {
     return BigTask(
         id = this.id,
         title = this.title,
@@ -11,6 +12,6 @@ fun BigTaskDto.toDomainModel(): BigTask {
     )
 }
 
-fun List<BigTaskDto>.toModelList(): List<BigTask> {
+fun List<BigTaskModel>.toModelList(): List<BigTask> {
     return this.map { it.toDomainModel() }
 }
