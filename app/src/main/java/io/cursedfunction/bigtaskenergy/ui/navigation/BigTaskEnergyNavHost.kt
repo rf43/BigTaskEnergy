@@ -39,6 +39,13 @@ fun BigTaskEnergyNavHost(
                             BigTasksEvent.NavigateToDetail -> {
                                 navController.navigate(BigTaskDetailScreenRoute)
                             }
+
+                            is BigTasksEvent.AddBigTask -> {
+                                viewmodel.createTask(
+                                    title = event.title,
+                                    description = event.description
+                                )
+                            }
                         }
                     }
                 )

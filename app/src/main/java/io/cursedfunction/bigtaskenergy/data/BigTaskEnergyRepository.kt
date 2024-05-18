@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface BigTaskEnergyRepository {
-    suspend fun createTask(title: String, description: String): Long
+    suspend fun createTask(title: String, description: String, isCompleted: Boolean): Long
     suspend fun getAllTasks(): List<BigTask>
 }
 
@@ -21,13 +21,17 @@ class DefaultBigTaskEnergyRepository @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope
 ) : BigTaskEnergyRepository {
 
-    override suspend fun createTask(title: String, description: String): Long {
+    override suspend fun createTask(
+        title: String,
+        description: String,
+        isCompleted: Boolean
+    ): Long {
         val taskId = withContext(dispatcher) {
             bigTaskEnergyDao.upsertTask(
                 BigTaskModel(
                     title = title,
                     description = description,
-                    isCompleted = false
+                    isCompleted = isCompleted
                 )
             )
         }
